@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap");
+
+.container {
+  width: 100%;
+  height: 400px;
+  display: flex;
+}
+
+.container>.box {
+  width: 45%;
+  height: 100%;
+  border: 2px solid pink;
+  margin: auto;
+}
+.maintext {
+  font-family: "Amatic SC", cursive;
+  font-size: 50px;
+}
+.nametext{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.media-container{
+    width:20%;
+    height:10%;
+    margin:auto;
+    display:flex;
+}
+.media-container>.box{
+    width:100%;
+    height:100%;
+}
+
+.media-container>.box>a{
+    width:100%;
+    height:100%;
+}
+
+img{
+    width:100%;
+    height:100%;
+}
