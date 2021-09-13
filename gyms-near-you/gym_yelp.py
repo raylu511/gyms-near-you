@@ -30,7 +30,8 @@ conn.close()
 
 
 #instantiate flask module
-app = Flask(__name__)
+app = Flask(__name__, template_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\templates',
+                        static_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\static')
 app.secret_key = 'replace later'
 
 #Client ID
@@ -83,18 +84,22 @@ def unpacker(*args):
 display(gym_df)
 
 #TODO:FLASK <--LOOK
-#Flask: Displays SQL database on HTML
-# @app.route("/history.html")
-# def shistory():
-#     cursor.execute("SELECT * FROM gym_df")
-#     dfd = cursor.fetchall()
-#     return render_template('history.html', data=dfd)
+@app.route("/") 
+def index():
+    return render_template("index.html")
 
-# #Flask: Upload top 5 results to page after button on HTML is clicked (POST request) 
-# @app.route("/",methods=["POST"])
-# def zipsub():
-#     if request.method == "POST":
-#         return render_template('/' column_names=gym_df.columns.values, row_data=list(gym_df.values.tolist()))
+#Flask: Displays SQL database on HTML
+@app.route("/history.html")
+def shistory():
+    cursor.execute("SELECT * FROM gym_df")
+    dfd = cursor.fetchall()
+    return render_template('history.html', data=dfd)
+
+# #Flask: Upload top 5 results from df to page after button on HTML is clicked (POST request) 
+@app.route("/",methods=["POST"])
+def zipsub():
+    if request.method == "POST":
+        return render_template('/', column_names=gym_df.columns.values, row_data=list(gym_df.values.tolist()))
 
 @app.route("/signup.html", methods=["GET","POST"])
 def register():
@@ -124,7 +129,7 @@ def register():
             flash('Please fill out the form!')
         else:
             # Account doesnt exists and the form data is valid, now insert new account into users table
-            cursor.execute("INSERT INTO users (fullname, username, password, email) VALUES (?,?,?,?)", (fname, uname, _hashed_password, email))
+            cursor.execute("INSERT INTO users (full_name, username, password, email) VALUES (?,?,?,?)", (fname, uname, _hashed_password, email))
             conn.commit()
             flash('You have successfully registered!')
     elif request.method == 'POST':
@@ -149,6 +154,7 @@ if __name__ == '__main__':
 
     #shistory()
 
+    app.run()
     #TODO:Create post event
 
 
