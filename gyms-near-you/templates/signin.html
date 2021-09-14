@@ -62,31 +62,18 @@
     </nav>
 
     <div class="form-container mt-5">
-      <h1 class="text-center">Sign Up</h1>
-      <form action="{{url_for('register')}}" name="register" method="POST" class="row g-3 mt-5">
-        <div class="col-sm-12">
-          <label for="fullname" class="form-label">Full Name</label>
-          <input type="text" class="form-control" id="fullname" />
-        </div>
+      <h1 class="text-center">Sign In</h1>
+      <form class="row mt-5">
         <div class="col-sm-12">
           <label for="username" class="form-label">Username</label>
           <input type="text" class="form-control" id="username" />
         </div>
         <div class="col-sm-12">
-          <label for="email" class="form-label">Email</label>
-          <input type="text" class="form-control" id="email" />
-        </div>
-        <div class="col-sm-12">
           <label for="password" class="form-label">Password</label>
           <input type="text" class="form-control" id="password" />
         </div>
-        <div class="row mx-auto mt-3">
-          <button type="submit" class="btn btn-primary">Sign Up</button>
-        </div>
-        <div class="row mx-auto mt-3 text-center">
-          <span>Have an account? Sign in</span>
-          <div class="col-md-4 mx-auto mt-2">
-            <a href="/signin">Sign in</a>
+          <div class="col-md-4 mx-auto ">
+            <button type="submit" class="btn btn-primary">Sign in</button>
           </div>
         </div>
       </form>
