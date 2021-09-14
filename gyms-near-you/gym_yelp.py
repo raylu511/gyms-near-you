@@ -9,6 +9,8 @@ from sqlalchemy import create_engine
 from flask_sqlalchemy import SQLAlchemy
 import datetime
 import pytz
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 zip_code = '11214'#input('Zipcode')
 
@@ -23,7 +25,7 @@ conn = psycopg2.connect(
     port='5432')
 cursor = conn.cursor()
 #Create cursor object using built in cursor() method
-cursor.execute("CREATE TABLE IF NOT EXISTS webapplogin (full_name TEXT NOT NULL, username VARCHAR(25) UNIQUE NOT NULL, password TEXT NOT NULL, email TEXT NOT NULL)")
+cursor.execute("CREATE TABLE IF NOT EXISTS webapplogin (id serial PRIMARY KEY, full_name VARCHAR ( 100 ) NOT NULL, username VARCHAR( 25 ) UNIQUE NOT NULL, password VARCHAR( 100 ) NOT NULL, email VARCHAR ( 50 ) NOT NULL)")
 conn.commit()
 #cursor.execute('SELECT * FROM gym_df')
 conn.close()
@@ -81,15 +83,28 @@ def unpacker(*args):
 
 
 #display df in terminal
-display(gym_df)
+#display(gym_df)
 
 #TODO:FLASK <--LOOK
+#Navigation
 @app.route("/") 
 def index():
     return render_template("index.html")
 
+@app.route("/signup",methods=["GET"])
+def signav():
+    return render_template('signup.html')
+
+@app.route("/signin",methods=["GET"])
+def signinav():
+    return render_template('signin.html')
+
+@app.route("/about_us",methods=["GET"])
+def aboutus():
+    return render_template('about.html')
+
 #Flask: Displays SQL database on HTML
-@app.route("/history.html")
+@app.route("/history")
 def shistory():
     cursor.execute("SELECT * FROM gym_df")
     dfd = cursor.fetchall()
@@ -99,9 +114,45 @@ def shistory():
 @app.route("/",methods=["POST"])
 def zipsub():
     if request.method == "POST":
-        return render_template('/', column_names=gym_df.columns.values, row_data=list(gym_df.values.tolist()))
+        return render_template('table.html', column_names=gym_df.columns.values, row_data=list(gym_df.values.tolist()))
 
-@app.route("/signup.html", methods=["GET","POST"])
+@app.route('/signin', methods=['GET', 'POST'])
+def login():
+    cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+   
+    # Check if "username" and "password" POST requests exist (user submitted form)
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+        uname = request.form['username']
+        password = request.form['password']
+        print(password)
+ 
+        # Check if account exists using MySQL
+        cursor.execute('SELECT * FROM users WHERE username = ?', (uname,))
+        # Fetch one record and return result
+        account = cursor.fetchone()
+ 
+        if account:
+            password_rs = account['password']
+            print(password_rs)
+            # If account exists in users table in out database
+            if check_password_hash(password_rs, password):
+                # Create session data, we can access this data in other routes
+                #TODO:session['loggedin'] = True
+                session['id'] = account['id']
+                session['username'] = account['username']
+                # Redirect to home page
+                return redirect(url_for('/'))
+            else:
+                # Account doesnt exist or username/password incorrect
+                flash('Incorrect username/password')
+        else:
+            # Account doesnt exist or username/password incorrect
+            flash('Incorrect username/password')
+ 
+    return render_template('login.html')
+
+#Flask script for registration page.
+@app.route("/signup", methods=["GET","POST"])
 def register():
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -111,7 +162,7 @@ def register():
         uname = request.form['username']
         password = request.form['password']
         email = request.form['email']
-
+        #hash password before sending to db
         _hashed_password = generate_password_hash(password)
     
         cursor.execute('SELECT * FROM users WHERE username = ?', (uname,))
@@ -129,14 +180,14 @@ def register():
             flash('Please fill out the form!')
         else:
             # Account doesnt exists and the form data is valid, now insert new account into users table
-            cursor.execute("INSERT INTO users (full_name, username, password, email) VALUES (?,?,?,?)", (fname, uname, _hashed_password, email))
+            cursor.execute("INSERT INTO webapplogin (full_name, username, password, email) VALUES (?,?,?,?)", (fname, uname, _hashed_password, email))
             conn.commit()
             flash('You have successfully registered!')
     elif request.method == 'POST':
         # Form is empty... (no POST data)
         flash('Please fill out the form!')
     # Show registration form with message (if any)
-    return render_template('register.html')
+    return render_template('signup.html')
 
 if __name__ == '__main__':
     #instantiate unpacker function
@@ -152,9 +203,7 @@ if __name__ == '__main__':
     #pd to SQL for search history
     gym_df.to_sql("gym_df", engine, if_exists='append')
 
-    #shistory()
-
+    #run flask
     app.run()
     #TODO:Create post event
-
 
