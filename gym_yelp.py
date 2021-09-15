@@ -1,4 +1,4 @@
-import requests
+import requests as reqs
 import yelpapi
 import pandas as pd
 from IPython.display import display
@@ -11,8 +11,8 @@ import datetime
 import pytz
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
-
-
+import json
+import sys
 
 #TODO: DEVELOP LOGIN SYSTEM
 #Create SQL connection using psycopg2
@@ -29,6 +29,7 @@ cursor.execute("CREATE TABLE IF NOT EXISTS webapplogin (full_name VARCHAR ( 250 
 # conn.commit()
 # conn.close()
 #cursor.execute('SELECT * FROM gym_df')
+gym_df = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
 
 #instantiate flask module
 app = Flask(__name__, template_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\templates',
@@ -69,54 +70,55 @@ def shistory():
 
 
 # #Flask: Upload top 5 results from df to page after button on HTML is clicked (POST request) 
-@app.route("/",methods=["POST"])
+@app.route("/",methods=["POST", "GET"])
 def zipsub():
+    global gym_df
     if request.method == "POST":
-        zip_code = request.form['search']
+        zip_code = request.form.get('zipsearch')
         #Client ID
-        client_id = 'Cev8jNKeXB1tVYbl3wwIUw'
+        clientid = 'Cev8jNKeXB1tVYbl3wwIUw'
         #define api key, endpoint and header for request to yelp API
         api_key = 'Uwp9Zz4K0F4VfCus7U3GWbbKbik7sX4UOdA7r8ir2XONuRcg1natwEwxNsxfeshBwvzxuBDuKJMziT9JnkJhQU6Ez20FGer5h-CJiVJW35DIbXvgnLol6IJ2EW47YXYx'
         end_point = 'https://api.yelp.com/v3/businesses/search'
         resp_header = {'Authorization': 'bearer {}'.format(api_key)}
-
+        
         #define parameters
         parameters = {'term':'gym',
                         'limit':5,
                         'radius':3200,
                         'location':'{}'.format(zip_code),
-                        'sort_by':'rating',
+                        'sort-by':'rating'
                         }
-
         #make api call
-        response = requests.get(url=end_point, params=parameters, headers=resp_header)
+        response = reqs.get(url=end_point, params=parameters, headers=resp_header)
 
         #Change json into dict then to pandas dataframe
         gym_dict = response.json()
 
-        #set columns we want to display
-
-        gym_df = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
         #unpack the json
-        for unpac in gym_dict['businesses']:
-            #only display street address
-            unpac['location']['display_address'] = unpac['location']['display_address'][0]
-            '''create dataset. This will result in a creation of a tuple, which then can turned into a list and 
-            then into a panda series which then can be appended onto the dataframe.
-            This function is so we can choose which specific information we want from yelp.
-            '''
-            #print(unpac)
-            data = unpac['image_url'],unpac['name'],unpac['location']['display_address'],unpac['rating'],unpac['phone']
-            datalist = list(data)
-            seriesly = pd.Series(datalist, index = gym_df.columns)
-            gym_df = gym_df.append(seriesly, ignore_index=True)
-            gym_df.to_sql("gym_df", engine, if_exists='append')
-            #ORDER DATAFRAME BY RATING
-            gym_df = gym_df.sort_values(by=['Rating'], ascending=False)
-            #gym_df.html(headers='True', table_id='my_table')
+        for valg in gym_dict['businesses']:
+            if valg in gym_dict['businesses']:
+                #only display street address
+                valg['location']['display_address'] = valg['location']['display_address'][0]
+                '''create dataset. This will result in a creation of a tuple, which then can turned into a list and 
+                then into a panda series which then can be appended onto the dataframe.
+                This function is so we can choose which specific information we want from yelp.
+                '''
+                data = valg['image_url'],valg['name'],valg['location']['display_address'],valg['rating'],valg['phone']
+                datalist = list(data)
+                seriesly = pd.Series(datalist, index = gym_df.columns)
+                gym_df = gym_df.append(seriesly, ignore_index=True)
+                #print(gym_df, file=sys.stdout)
+                #gym_df.to_html(table='my_table')
+
+                gym_df.to_sql("gym_df", engine, if_exists='append')
+
+                #ORDER DATAFRAME BY RATING
+                gym_df = gym_df.sort_values(by=['Rating'], ascending=False)
 
     return render_template('table.html', column_names=gym_df.columns.values, row_data=list(gym_df.values.tolist()), zip=zip)
-
+    #, tables=[gym_df.to_html(table_id='my_table')])
+   
 @app.route('/signin', methods=['GET', 'POST'])
 def login():
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -195,12 +197,10 @@ if __name__ == '__main__':
     #TODO: add timestamp
     #Create SQL engine using SQLAlchemy
     engine = create_engine('postgresql+psycopg2://postgres:1123@localhost:5432/yhistory')
-
     #run flask
     app.debug=True
-    app.run()
-
-    #instantiate unpacker function
+    app.run(threaded=True)
+    #instantiate valgker function
     #pd to SQL for search history
 
     #TODO:Create post event
