@@ -65,28 +65,32 @@
     </div>
 
     <div class="container-md mt-5 ">
-      <table class="table">
+      <table id="my_table", class="table">
         <thead>
-          <tr class="row">
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
+
+          <tr>
+            {% for col in column_names %}
+            <th>
             
+              {{col}}
+             
+            </th>
+            {% endfor %}
           </tr>
+
         </thead>
         <tbody>
-          <tr class="row">
-            <th class="col-2 border border-primary"></th>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>
-            <td class="col-2 border border-primary"></td>           
+          {% for row in row_data %}
+          <tr>
+            {% for col, row_ in zip(column_names, row) %}
+            <td>{{row_}}</td>
+            {% endfor %}
           </tr>
+          {% endfor %}
+
+         
         </tbody>
+  
       </table>
     </div>
 
