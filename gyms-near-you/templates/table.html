@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gym Locator</title>
     <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="../static/table.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -64,33 +65,26 @@
       <h1 class="text-primary">Search Results</h1>
     </div>
 
-    <div class="container-md mt-5 ">
-      <table id="my_table", class="table">
+    <div class="container-md mt-5">
+      <table id="my_table" , class="table">
         <thead>
-
           <tr>
             {% for col in column_names %}
-            <th>
-            
-              {{col}}
-             
-            </th>
+            <th class="col-sm-2">{{col}}</th>
             {% endfor %}
           </tr>
-
         </thead>
         <tbody>
           {% for row in row_data %}
           <tr>
-            {% for col, row_ in zip(column_names, row) %}
+            {% for col, row_ in zip(column_names, row) %} {%if loop.first %}
+            <td><img src="{{row_}}" alt="" /></td>
+            {% else: %}
             <td>{{row_}}</td>
-            {% endfor %}
+            {% endif %} {% endfor %}
           </tr>
           {% endfor %}
-
-         
         </tbody>
-  
       </table>
     </div>
 
