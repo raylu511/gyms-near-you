@@ -53,7 +53,7 @@ def signav():
 def signinav():
     return render_template('signin.html')
 
-@app.route("/about-us",methods=["GET"])
+@app.route("/about",methods=["GET"])
 def aboutus():
     return render_template('about.html')
 
@@ -62,12 +62,13 @@ def totable():
     return render_template('table.html')
 
 #Flask: Displays SQL database on HTML
-@app.route("/history")
+@app.route("/history",methods=["GET","POST"])
 def shistory():
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM gym_df")
     dfd = cursor.fetchall()
-    return render_template('history.html', data=dfd)
-
+    print(dfd)
+    return render_template('history.html', data=dfd,)
 
 # #Flask: Upload top 5 results from df to page after button on HTML is clicked (POST request) 
 @app.route("/",methods=["POST", "GET"])
@@ -110,13 +111,13 @@ def zipsub():
                 gym_df = gym_df.append(seriesly, ignore_index=True)
                 #print(gym_df, file=sys.stdout)
                 #gym_df.to_html(table='my_table')
-
+                gym_dft5 = gym_df
                 gym_df.to_sql("gym_df", engine, if_exists='append')
 
                 #ORDER DATAFRAME BY RATING
                 gym_df = gym_df.sort_values(by=['Rating'], ascending=False)
-
-    return render_template('table.html', column_names=gym_df.columns.values, row_data=list(gym_df.values.tolist()), zip=zip)
+                
+    return render_template('table.html', column_names=gym_df.columns.values, row_data=list(gym_df.tail(5).values.tolist()), zip=zip)
     #, tables=[gym_df.to_html(table_id='my_table')])
    
 @app.route('/signin', methods=['GET', 'POST'])
@@ -152,7 +153,7 @@ def login():
             # Account doesnt exist or username/password incorrect
             flash('Incorrect username/password')
  
-    return render_template('login.html')
+    return render_template('/index.html')
 
 #Flask script for registration page.
 @app.route("/signup", methods=["GET","POST"])
@@ -196,12 +197,13 @@ def register():
 if __name__ == '__main__':
     #TODO: add timestamp
     #Create SQL engine using SQLAlchemy
-    engine = create_engine('postgresql+psycopg2://postgres:1123@localhost:5432/yhistory')
+    engine = create_engine('postgresql+psycopg2://postgres:1123@localhost:5432/postgres')
+
     #run flask
     app.debug=True
     app.run(threaded=True)
     #instantiate valgker function
     #pd to SQL for search history
-
+    cursor.close()
     #TODO:Create post event
 

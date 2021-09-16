@@ -40,7 +40,7 @@
             <li class="nav-item p-2">
               <a
                 class="nav-link"
-                href="history.html"
+                href="/history"
                 tabindex="-1"
                 aria-disabled="true"
                 >Search History</a
@@ -49,7 +49,7 @@
             <li class="nav-item p-2">
               <a
                 class="nav-link"
-                href="/about-us"
+                href="/about"
                 tabindex="-2"
                 aria-disabled="true"
                 >About Us</a
@@ -61,6 +61,34 @@
     </nav>
 
     <div>Search HISTORY</div>
+    <div class="container-md mt-5 ">
+      <table id="das_table", class="table">
+        <thead>
+          <tr>
+            {% for col in column_names %}
+            <th>
+            
+              {{col}}
+             
+            </th>
+            {% endfor %}
+          </tr>
+
+        </thead>
+        <tbody>
+          {% for row in row_data %}
+          <tr>
+            {% for col, row_ in zip(column_names, row) %}
+            <td>{{row_}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+
+         
+        </tbody>
+  
+      </table>
+    </div>
 
     <!-- Footer -->
     <footer class="footer-container"></footer>
