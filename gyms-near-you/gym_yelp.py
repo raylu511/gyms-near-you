@@ -30,7 +30,7 @@ cursor.execute("CREATE TABLE IF NOT EXISTS webapplogin (full_name VARCHAR ( 250 
 # conn.close()
 #cursor.execute('SELECT * FROM gym_df')
 gym_df = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
-
+histore = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
 #instantiate flask module
 app = Flask(__name__, template_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\templates',
                         static_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\static')
@@ -64,11 +64,11 @@ def totable():
 #Flask: Displays SQL database on HTML
 @app.route("/history",methods=["GET","POST"])
 def shistory():
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM gym_df")
-    dfd = cursor.fetchall()
-    print(dfd)
-    return render_template('history.html', data=dfd,)
+    global histore   
+    dfd =  pd.read_sql_query('''SELECT * FROM gym_df''', conn)
+    histore = histore.append(dfd, ignore_index=True)
+    #TODO:Set column names and pass tuples through as list of rows
+    return render_template('history.html', column_names=histore.columns.values, row_data=list(histore.values.tolist()), zip=zip)
 
 # #Flask: Upload top 5 results from df to page after button on HTML is clicked (POST request) 
 @app.route("/",methods=["POST", "GET"])
@@ -145,7 +145,7 @@ def login():
                 session['id'] = account['id']
                 session['username'] = account['username']
                 # Redirect to home page
-                return redirect(url_for('/'))
+                return redirect(url_for('/index.html'))
             else:
                 # Account doesnt exist or username/password incorrect
                 flash('Incorrect username/password')
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     #run flask
     app.debug=True
     app.run(threaded=True)
-    #instantiate valgker function
+    #instantiate unpackker function
     #pd to SQL for search history
     cursor.close()
     #TODO:Create post event
