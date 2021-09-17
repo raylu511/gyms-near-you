@@ -28,16 +28,44 @@ cursor = conn.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS webapplogin (full_name VARCHAR ( 250 ) NOT NULL, username VARCHAR( 200 ) UNIQUE NOT NULL, password VARCHAR( 250 ) NOT NULL, email VARCHAR ( 200 ) NOT NULL)")
 # conn.commit()
 # conn.close()
+# class weblogin(db.Model):
+#     """User account model."""
+#     __tablename__ = 'webapplogin'
+#     id = db.Column(
+#         db.Integer,
+#         primary_key=True
+#     )
+#     full_name = db.Column(
+#         db.String(100),
+#         nullable=False,
+#         unique=False
+#     )
+#     username = db.Column(
+#         db.String(150)
+#         nullable=False,
+#         unique=True
+#         )
+#     )
+#     email = db.Column(
+#         db.String(40)
+#     )
+#     password = db.Column(
+#         db.String(200),
+#         primary_key=False,
+#         unique=False,
+#         nullable=False
+#     )
+    
+
 #cursor.execute('SELECT * FROM gym_df')
 gym_df = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
 histore = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
 #instantiate flask module
 app = Flask(__name__, template_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\templates',
                         static_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\static')
-app.secret_key = 'replace later'
+app.secret_key = 'a1a1s2d3d3f4g5g5gdfc4trby65ASED#EWf4tserfd3R#DFSF43sfdr$#FF'
 
-#display df in terminal
-#display(gym_df)
+#app.route
 
 #TODO:FLASK <--LOOK
 #Navigation
@@ -98,24 +126,22 @@ def zipsub():
 
         #unpack the json
         for valg in gym_dict['businesses']:
-            if valg in gym_dict['businesses']:
-                #only display street address
-                valg['location']['display_address'] = valg['location']['display_address'][0]
-                '''create dataset. This will result in a creation of a tuple, which then can turned into a list and 
-                then into a panda series which then can be appended onto the dataframe.
-                This function is so we can choose which specific information we want from yelp.
-                '''
-                data = valg['image_url'],valg['name'],valg['location']['display_address'],valg['rating'],valg['phone']
-                datalist = list(data)
-                seriesly = pd.Series(datalist, index = gym_df.columns)
-                gym_df = gym_df.append(seriesly, ignore_index=True)
-                #print(gym_df, file=sys.stdout)
-                #gym_df.to_html(table='my_table')
-                gym_dft5 = gym_df
-                gym_df.to_sql("gym_df", engine, if_exists='append')
+            #only display street address
+            valg['location']['display_address'] = valg['location']['display_address'][0]
+            '''create dataset. This will result in a creation of a tuple, which then can turned into a list and 
+            then into a panda series which then can be appended onto the dataframe.
+            This function is so we can choose which specific information we want from yelp.
+            '''
+            data = valg['image_url'],valg['name'],valg['location']['display_address'],valg['rating'],valg['phone']
+            datalist = list(data)
+            seriesly = pd.Series(datalist, index = gym_df.columns)
+            gym_df = gym_df.append(seriesly, ignore_index=True)
+            #print(gym_df, file=sys.stdout)
 
-                #ORDER DATAFRAME BY RATING
-                gym_df = gym_df.sort_values(by=['Rating'], ascending=False)
+        gym_df.to_sql("gym_df", engine, if_exists='replace')
+
+            #ORDER DATAFRAME BY RATING
+        gym_df = gym_df.sort_values(by=['Rating'], ascending=False)
                 
     return render_template('table.html', column_names=gym_df.columns.values, row_data=list(gym_df.tail(5).values.tolist()), zip=zip)
     #, tables=[gym_df.to_html(table_id='my_table')])
@@ -141,7 +167,7 @@ def login():
             # If account exists in users table in out database
             if check_password_hash(password_rs, password):
                 # Create session data, we can access this data in other routes
-                #TODO:session['loggedin'] = True
+                session['loggedin'] = True
                 session['id'] = account['id']
                 session['username'] = account['username']
                 # Redirect to home page
