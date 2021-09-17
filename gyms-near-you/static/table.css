@@ -1,6 +1,10 @@
-img{
-    width:100%;
-    height:100%;
+@import url("https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap");
+img {
+  width: 100%;
+  height: 100%;
 }
 
-
+.history {
+  font-family: "Amatic SC", cursive;
+  font-size: 50px;
+}
