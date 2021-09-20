@@ -143,7 +143,7 @@ def zipsub():
             #ORDER DATAFRAME BY RATING
         gym_df = gym_df.sort_values(by=['Rating'], ascending=False)
                 
-    return render_template('table.html', column_names=gym_df.columns.values, row_data=list(gym_df.tail(5).values.tolist()), zip=zip)
+    return render_template('table.html', column_names=gym_df.columns.values, row_data=list(gym_df.values.tolist()), zip=zip)
     #, tables=[gym_df.to_html(table_id='my_table')])
    
 @app.route('/signin', methods=['GET', 'POST'])
