@@ -95,7 +95,9 @@ def shistory():
     global histore   
     dfd =  pd.read_sql_query('''SELECT * FROM gym_df''', conn)
     histore = histore.append(dfd, ignore_index=True)
-    #TODO:Set column names and pass tuples through as list of rows
+    if histore is histore:
+        return redirect(url_for('history.html'))
+    # #TODO:Set column names and pass tuples through as list of rows
     return render_template('history.html', column_names=histore.columns.values, row_data=list(histore.values.tolist()), zip=zip)
 
 # #Flask: Upload top 5 results from df to page after button on HTML is clicked (POST request) 
