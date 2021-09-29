@@ -73,6 +73,10 @@ app.secret_key = 'a1a1s2d3d3f4g5g5gdfc4trby65ASED#EWf4tserfd3R#DFSF43sfdr$#FF'
 def index():
     return render_template("index.html")
 
+@app.route("/bmicalc",methods=["GET"])
+def bmireload():
+    return render_template("bmicalc.html")
+
 @app.route("/signup",methods=["GET"])
 def signav():
     return render_template('signup.html')
@@ -83,7 +87,23 @@ def signinav():
 
 @app.route("/bmicalc",methods=['GET','POST'])
 def bmicalc():
-    request.form.get()
+    if request.method == "POST" and "heightval" in request.method and "weightval" in request.method:
+        heightval = int(request.form['hform'])
+        weightval = int(request.form['wform'])
+        bmi = (703 * (weightval / (heightval ** 2)))
+        if bmi in underweight:
+            print("You are underweight. Nurish yourself food please.")
+        elif bmi in normal:
+            print("You average, keep it up.")
+        elif bmi in aboveavg:
+            print("You're either slightly overweight or quite muscular")
+        elif bmi in obese:
+            print("You are likely obese or very muscular.")
+        elif bmi > 41:
+            print("Theres a problem with the program or you're extremely obese")
+        else:
+            return render_template('bmicalc.html')
+
 
 @app.route("/about",methods=["GET"])
 def aboutus():
@@ -225,6 +245,11 @@ def register():
 
 
 if __name__ == '__main__':
+    #TODO: set bmi ranges
+    underweight = range(1, 20)
+    normal = range(20, 26)
+    aboveavg = range(26, 31)
+    obese = range(31, 40)
     #TODO: add timestamp
     #Create SQL engine using SQLAlchemy
     engine = create_engine('postgresql+psycopg2://postgres:1123@localhost:5432/postgres')
