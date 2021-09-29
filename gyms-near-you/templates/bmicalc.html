@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gym Locator</title>
     <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="../static/signup.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -38,8 +39,8 @@
               <a class="nav-link" href="/signup">Sign Up</a>
             </li>
             <li class="nav-item p-2">
-              <a class="nav-link" href="/bmitracker">BMI Tracker</a>
-            </li>
+                <a class="nav-link" href="/bmitracker">BMI Tracker</a>
+              </li>
             <li class="nav-item p-2">
               <a
                 class="nav-link"
@@ -52,7 +53,7 @@
             <li class="nav-item p-2">
               <a
                 class="nav-link"
-                href="/about"
+                href="/about-us"
                 tabindex="-2"
                 aria-disabled="true"
                 >About Us</a
@@ -63,36 +64,22 @@
       </div>
     </nav>
 
-    <div>
-      <h1 class="text-primary">Search History</h1>
-    </div>
-    <div class="container-md mt-5 ">
-      <table id="das_table", class="table">
-        <thead>
-          <tr>
-            {% for col in column_names %}
-            <th>
-            
-              {{col}}
-             
-            </th>
-            {% endfor %}
-          </tr>
+    <div class="form-container mt-5">
+      <h1 class="text-center">BMI Calculator/Tracker</h1>
+      <form action="{{url_for('BMIcal')}}" name="bmiform" method="POST" class="row g-3 mt-5">
+        <div class="col-sm-12">
+          <label for="hform" class="form-label">Height(in.)</label>
+          <input type="number" name="hform" class="form-control" id="hform" />
+        </div>
+        <div class="col-sm-12">
+          <label for="wform" class="form-label">Weight(lb)</label>
+          <input type="number" name="hform" class="form-control" id="wform" />
+        </div>
+               <div class="row mx-auto mt-3">
+          <button class="button" name="bmisubmit" type="submit">Search</button>
 
-        </thead>
-        <tbody>
-          {% for row in row_data %}
-          <tr>
-            {% for col, row_ in zip(column_names, row) %}
-            <td>{{row_}}</td>
-            {% endfor %}
-          </tr>
-          {% endfor %}
-
-         
-        </tbody>
-  
-      </table>
+        </div>
+      </form>
     </div>
 
     <!-- Footer -->
