@@ -39,7 +39,7 @@
               <a class="nav-link" href="/signup">Sign Up</a>
             </li>
             <li class="nav-item p-2">
-                <a class="nav-link" href="/bmitracker">BMI Tracker</a>
+                <a class="nav-link" href="/bmicalc">BMI Tracker</a>
               </li>
             <li class="nav-item p-2">
               <a
@@ -53,7 +53,7 @@
             <li class="nav-item p-2">
               <a
                 class="nav-link"
-                href="/about-us"
+                href="/about"
                 tabindex="-2"
                 aria-disabled="true"
                 >About Us</a
@@ -66,7 +66,7 @@
 
     <div class="form-container mt-5">
       <h1 class="text-center">BMI Calculator/Tracker</h1>
-      <form action="{{url_for('BMIcal')}}" name="bmiform" method="POST" class="row g-3 mt-5">
+      <form action="{{url_for('bmicalc')}}" name="bmiform" method="POST" class="row g-3 mt-5">
         <div class="col-sm-12">
           <label for="hform" class="form-label">Height(in.)</label>
           <input type="number" name="hform" class="form-control" id="hform" />
