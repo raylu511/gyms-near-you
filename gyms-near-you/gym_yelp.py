@@ -58,8 +58,8 @@ cursor.execute("CREATE TABLE IF NOT EXISTS webapplogin (full_name VARCHAR ( 250 
     
 
 #cursor.execute('SELECT * FROM gym_df')
-gym_df = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
-histore = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#'))
+gym_df = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#','Business ID'))
+histore = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#',''))
 #instantiate flask module
 app = Flask(__name__, template_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\templates',
                         static_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\static')
@@ -81,6 +81,10 @@ def signav():
 def signinav():
     return render_template('signin.html')
 
+@app.route("/bmicalc",methods=['GET','POST'])
+def bmicalc():
+    request.form.get()
+
 @app.route("/about",methods=["GET"])
 def aboutus():
     return render_template('about.html')
@@ -95,8 +99,8 @@ def shistory():
     global histore   
     dfd =  pd.read_sql_query('''SELECT * FROM gym_df''', conn)
     histore = histore.append(dfd, ignore_index=True)
-    if histore is histore:
-        return redirect(url_for('history.html'))
+    # if histore is histore:
+    #     return redirect(url_for('history.html'))
     # #TODO:Set column names and pass tuples through as list of rows
     return render_template('history.html', column_names=histore.columns.values, row_data=list(histore.values.tolist()), zip=zip)
 
@@ -106,8 +110,6 @@ def zipsub():
     global gym_df
     if request.method == "POST":
         zip_code = request.form.get('zipsearch')
-        #Client ID
-        clientid = 'Cev8jNKeXB1tVYbl3wwIUw'
         #define api key, endpoint and header for request to yelp API
         api_key = 'Uwp9Zz4K0F4VfCus7U3GWbbKbik7sX4UOdA7r8ir2XONuRcg1natwEwxNsxfeshBwvzxuBDuKJMziT9JnkJhQU6Ez20FGer5h-CJiVJW35DIbXvgnLol6IJ2EW47YXYx'
         end_point = 'https://api.yelp.com/v3/businesses/search'
@@ -134,14 +136,14 @@ def zipsub():
             then into a panda series which then can be appended onto the dataframe.
             This function is so we can choose which specific information we want from yelp.
             '''
-            data = valg['image_url'],valg['name'],valg['location']['display_address'],valg['rating'],valg['phone']
+            data = valg['image_url'],valg['name'],valg['location']['display_address'],valg['rating'],valg['phone'],valg['id']
             datalist = list(data)
             seriesly = pd.Series(datalist, index = gym_df.columns)
             gym_df = gym_df.append(seriesly, ignore_index=True)
             #print(gym_df, file=sys.stdout)
 
         gym_df.to_sql("gym_df", engine, if_exists='replace')
-
+        #print(data)
             #ORDER DATAFRAME BY RATING
         gym_df = gym_df.sort_values(by=['Rating'], ascending=False)
                 
