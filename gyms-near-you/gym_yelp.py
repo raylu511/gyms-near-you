@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import re
 import json
 import sys
-
+#Hello
 #TODO: DEVELOP LOGIN SYSTEM
 #Create SQL connection using psycopg2
 """Connect to POSTGRESQL"""
