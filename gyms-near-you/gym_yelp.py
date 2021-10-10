@@ -1,7 +1,7 @@
 import requests as reqs
 import yelpapi
 import pandas as pd
-from IPython.display import display
+# from IPython.display import display
 from flask import Flask, request, session, url_for, render_template, flash, redirect
 import psycopg2
 import psycopg2.extras
@@ -20,7 +20,7 @@ import sys
 conn = psycopg2.connect(
     database="postgres",
     user="postgres",
-    password="1123",
+    password="8333",
     host='localhost',
     port='5432')
 cursor = conn.cursor()
@@ -61,8 +61,8 @@ cursor.execute("CREATE TABLE IF NOT EXISTS webapplogin (full_name VARCHAR ( 250 
 gym_df = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#','Business ID'))
 histore = pd.DataFrame(columns=('Picture','Name','Location','Rating','Phone#',''))
 #instantiate flask module
-app = Flask(__name__, template_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\templates',
-                        static_folder='C:\\Users\\derek\\PycharmProjects\\pythonProject1\\gyms-near-you-master\\gyms-near-you\\static')
+app = Flask(__name__, template_folder='C:\\Users\\raylu\OneDrive\\Desktop\\Projects\\daviet\\gyms-near-you\\gyms-near-you\\templates',
+                        static_folder='C:\\Users\\raylu\\OneDrive\\Desktop\\Projects\\daviet\\gyms-near-you\\gyms-near-you\\static')
 app.secret_key = 'a1a1s2d3d3f4g5g5gdfc4trby65ASED#EWf4tserfd3R#DFSF43sfdr$#FF'
 
 #app.route
@@ -252,7 +252,7 @@ if __name__ == '__main__':
     obese = range(31, 40)
     #TODO: add timestamp
     #Create SQL engine using SQLAlchemy
-    engine = create_engine('postgresql+psycopg2://postgres:1123@localhost:5432/postgres')
+    engine = create_engine('postgresql+psycopg2://postgres:8333@localhost:5432/postgres')
 
     #run flask
     app.debug=True

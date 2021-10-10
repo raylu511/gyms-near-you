@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="../static/style.css" />
     <link rel="stylesheet" href="../static/signup.css" />
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
   </head>
@@ -39,8 +39,8 @@
               <a class="nav-link" href="/signup">Sign Up</a>
             </li>
             <li class="nav-item p-2">
-                <a class="nav-link" href="/bmicalc">BMI Tracker</a>
-              </li>
+              <a class="nav-link" href="/bmicalc">BMI Tracker</a>
+            </li>
             <li class="nav-item p-2">
               <a
                 class="nav-link"
@@ -64,22 +64,42 @@
       </div>
     </nav>
 
-    <div class="form-container mt-5">
-      <h1 class="text-center">BMI Calculator/Tracker</h1>
-      <form action="{{url_for('bmicalc')}}" name="bmiform" method="POST" class="row g-3 mt-5">
-        <div class="col-sm-12">
-          <label for="hform" class="form-label">Height(in.)</label>
-          <input type="number" name="hform" class="form-control" id="hform" />
-        </div>
-        <div class="col-sm-12">
-          <label for="wform" class="form-label">Weight(lb)</label>
-          <input type="number" name="hform" class="form-control" id="wform" />
-        </div>
-               <div class="row mx-auto mt-3">
-          <button class="button" name="bmisubmit" type="submit">Search</button>
+    <div class="container">
+      <div class="row mt-5">
+        <!-- BMI FORM -->
+        <div class="col-4">
+          <h3 class="text-center">BMI Calculator/Tracker</h3>
+          <form action="{{url_for('bmicalc')}}" method="POST">
+            <div class="row">
+              <div class="form-group col-6">
+                <label for="hform">Height(In)</label>
+                <input
+                  class="form-control"
+                  type="number"
+                  name="hform"
+                  id="hform"
+                />
+              </div>
 
+              <div class="form-group col-6">
+                <label for="wform">Weight(lb)</label>
+                <input
+                  class="form-control"
+                  type="number"
+                  name="wform"
+                  id="wform"
+                />
+              </div>
+              <div class="form-group mt-3"></div>
+              <button type="submit" name="bmisubmit" class="btn btn-primary">
+                Get BMI
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+        <!-- BMI Table -->
+        <div class="col-6"></div>
+      </div>
     </div>
 
     <!-- Footer -->
@@ -87,8 +107,8 @@
 
     <script src="script.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
   </body>
